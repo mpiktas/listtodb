@@ -12,10 +12,10 @@ id1 <- unique(sapply(1:30, function(i) paste0(sample(toupper(letters),5,replace=
 id2 <- unique(sapply(1:30, function(i) paste0(sample(letters,5,replace=TRUE),collapse="")))
 
 ##llen <- 10
-llen <- 1
+llen <- 2
 
 #objdata <- lapply(rep(200,llen),asim)
-objdata <- lapply(rep(2,llen),asim)
+objdata <- lapply(rep(200,llen),asim)
 
 objlist <- lapply(objdata, function(x) list(data=x,model=auto.arima(x)))
 
@@ -32,7 +32,7 @@ o3 <- lapply(o2,function(x){
 })
 
 ## do we really need it as a data.frame ?
-todb <- as.data.frame(do.call("rbind",o3))
+todb <- do.call("rbind",o3)
 
 m <- dbDriver("SQLite")
 
