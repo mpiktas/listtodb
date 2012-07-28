@@ -1,3 +1,4 @@
+#!/usr/bin/r
 
 library(stats)
 library(RSQLite)
@@ -14,14 +15,17 @@ con <- dbConnect(m, dbname = "/tmp/02simpler.sqlite")  ## adjust path if on Wind
 if (!dbExistsTable(con, "foo"))
     dbSendQuery(con, "create table foo (id integer, val varchar)")
 txt <-  paste("insert into foo values(1, \"", rawToChar(serialize(fit,NULL,ascii=TRUE)), "\")", sep="")
-dbSendQuery(con, txt)
+res <- dbSendQuery(con, txt)
+dbClearResult(res)
 dbDisconnect(con)
 
 
 con <- dbConnect(m, dbname = "/tmp/02simpler.sqlite")  ## adjust path if on Windows and /tmp does not exist
-data <- dbGetQuery(con, "select * from foo where id==1")
+data <- dbGetQuery(con, "select * from foo where id==1 limit 1")
 dbDisconnect(con)
 
 
 ## new check
 all.equal(fit,  unserialize( charToRaw(data[,"val"]) ) )
+
+cat("Done.\n")
